@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = [
 USER_APPS = [
     'common',
     'user',
+    'trip'
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + USER_APPS
