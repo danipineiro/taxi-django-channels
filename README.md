@@ -17,5 +17,5 @@ Se trata de una plantilla básica para un proyecto Django, donde ya se ha implem
    
 2. Construye y levanta los servicios de Docker.
     ```bash
-    docker-compose up --build
+    docker compose up --build
     ```
