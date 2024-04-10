@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from .base import *
 
 MIDDLEWARE += [
@@ -18,6 +20,10 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'DEBUG',
     },
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3600),
 }
 
 MAIL_PROVIDER_KEY = os.environ.get("MAIL_PROVIDER_KEY", None)
