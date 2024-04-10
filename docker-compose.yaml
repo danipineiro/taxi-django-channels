@@ -28,6 +28,16 @@ services:
       - django
       - redis
 
+  angular:
+    container_name: frontend
+    build: frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - django
+
   postgres:
     container_name: postgres
     image: postgres:15
