@@ -1,12 +1,8 @@
-FROM node:18.13.0-alpine
+FROM node:alpine
 
-# Create app folder
-RUN mkdir -p /app
+WORKDIR /usr/src/app
 
-# Copy project to app folder dependencies
-COPY . /app/
-
-WORKDIR /app
+COPY . /usr/src/app
 
 RUN npm install -g @angular/cli
 
