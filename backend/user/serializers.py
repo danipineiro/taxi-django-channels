@@ -12,6 +12,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'email',
+            'type',
             'password',
             'password2',
         )
@@ -25,6 +26,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(
             email=validated_data['email'],
+            type=validated_data['type'],
         )
 
         user.set_password(validated_data['password'])
@@ -40,4 +42,5 @@ class ProfileUserSerializer(serializers.ModelSerializer):
             'email',
             'email_verified',
             'is_active',
+            'type'
         )

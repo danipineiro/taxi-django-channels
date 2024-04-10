@@ -8,7 +8,7 @@ from user.managers import CustomUserManager
 class User(AbstractBaseUser,
            PermissionsMixin,
            TimeStampedModel):
-    
+
     DRIVER = 'driver'
     PASSENGER = 'passenger'
     USER_TYPE_CHOICES = (
@@ -27,3 +27,6 @@ class User(AbstractBaseUser,
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
