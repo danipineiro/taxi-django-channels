@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  django:
+    container_name: backend
+    build: backend
+    entrypoint: /entrypoint.sh
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ./.env
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  celery:
+    container_name: celery
+    command: celery -A config.celery worker -l DEBUG --max-memory-per-child=300000
+    build: backend
+    env_file:
+      - ./.env
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+      - django
+      - redis
+
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+
+  redis:
+    container_name: redis
+    image: redis:6.0.8
+
+volumes:
+  postgres_data:
