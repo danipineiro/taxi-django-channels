@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>Sign Up</h1>
 <div mat-dialog-content>
-  <form>
+  <form [formGroup]="signupForm">
     <mat-form-field>
-      <input matInput placeholder="Email" name="username" required>
+      <input matInput placeholder="Email" formControlName="username" required>
       <mat-error>
         Please provide a valid email address
       </mat-error>
@@ -10,28 +10,32 @@
 
     <mat-form-field>
       <mat-label>User type</mat-label>
-      <mat-select>
-        <mat-option value="one">Driver</mat-option>
-        <mat-option value="two">Passenger</mat-option>
+      <mat-select formControlName="user_type">
+        <mat-option [value]="passenger">Passenger</mat-option>
+        <mat-option [value]="driver">Driver</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="password" placeholder="Password" name="password" required>
-      <mat-error>
+      <input matInput type="password" placeholder="Password" formControlName="password" required>
+      <mat-error *ngIf="signupForm.get('password')?.errors">
         Please provide a valid password
       </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="password" placeholder="Confirm Password" name="confirmPassword" required>
-      <mat-error>
+      <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword" required>
+      <mat-error *ngIf="signupForm.get('confirmPassword')?.errors">
+        Please provide a valid password
+      </mat-error>
+      <mat-error *ngIf="signupForm.hasError('notSame')">
         Passwords do not match
       </mat-error>
     </mat-form-field>
+
   </form>
 </div>
 
 <div mat-dialog-actions align="center">
- <button mat-flat-button color="primary" (click)="signUp()">Sign Up</button>
+  <button mat-flat-button color="primary" (click)="signUp()" [disabled]="!signupForm.valid">Sign Up</button>
 </div>

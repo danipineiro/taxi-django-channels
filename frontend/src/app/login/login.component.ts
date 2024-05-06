@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDivider} from "@angular/material/divider";
 import {MatDialog} from "@angular/material/dialog";
 import {SignupComponent} from "../signup/signup.component";
+import {AuthService} from "../services/auth.service";
 
 
 @Component({
@@ -18,7 +19,8 @@ import {SignupComponent} from "../signup/signup.component";
 })
 export class LoginComponent {
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private authService: AuthService
   ) {
   }
 
