@@ -54,5 +54,7 @@ export class AuthService {
     localStorage.setItem('refresh', token);
   }
 
-
+   isLogged() {
+     return !!localStorage.getItem('access');
+   }
 }

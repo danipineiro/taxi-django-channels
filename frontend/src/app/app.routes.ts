@@ -1,10 +1,19 @@
 import { Routes } from '@angular/router';
 import {LoginComponent} from "./login/login.component";
+import {HomeComponent} from "./home/home.component";
+import {isLoggedGuard} from "./guards/is-logged.guard";
 
 export const routes: Routes = [
   {
     path: '',
-    component: LoginComponent,
+    component: HomeComponent,
+    canActivate: [isLoggedGuard],
     title: 'Home page'
+  },
+
+  {
+    path: 'login',
+    component: LoginComponent,
+    title: 'Login page'
   },
 ];

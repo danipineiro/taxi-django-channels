@@ -9,6 +9,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {SignupComponent} from "../signup/signup.component";
 import {AuthService} from "../services/auth.service";
 import {LoginResponseDTO} from "../models/login-response-dto";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
   }
 
@@ -41,6 +43,7 @@ export class LoginComponent implements OnInit {
         next: (response: LoginResponseDTO) => {
           this.authService.setAccessToken(response.access);
           this.authService.setRefreshToken(response.refresh);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error(error);
