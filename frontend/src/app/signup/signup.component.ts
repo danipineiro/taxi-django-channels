@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component,Inject, OnInit} from '@angular/core';
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatOption, MatSelect} from "@angular/material/select";
-import {MatDialogActions, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatDialogActions, MatDialogContent, MatDialogTitle, MatDialogRef, MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {
   AbstractControl,
   FormControl,
@@ -45,24 +45,30 @@ export class SignupComponent implements OnInit {
   passenger = PASSENGER;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    public dialogRef: MatDialogRef<SignupComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
   }
 
   ngOnInit() {
     this.signupForm = new FormGroup({
-      username: new FormControl('', [Validators.required, Validators.email]),
-      user_type: new FormControl(this.passenger, Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      type: new FormControl(this.passenger, Validators.required),
       password: new FormControl('', Validators.required),
-      confirmPassword: new FormControl('', Validators.required)
+      password2: new FormControl('', Validators.required)
     }, [this.checkPasswords]);
   }
 
   checkPasswords(group: AbstractControl) {
-    if (group.get('password')?.value !== group.get('confirmPassword')?.value) {
+    if (group.get('password')?.value !== group.get('password2')?.value) {
       return {notSame: true};
     }
     return null;
+  }
+
+  closeDialog(): void {
+    this.dialogRef.close();
   }
 
   signUp() {
@@ -77,6 +83,7 @@ export class SignupComponent implements OnInit {
         },
         complete: () => {
           console.log('Registration completed');
+          this.closeDialog();
         }
       }
     );

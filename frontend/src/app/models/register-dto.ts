@@ -8,5 +8,6 @@ export enum UserType {
 export interface RegisterDTO {
   email: string;
   password: string;
-  user_type: UserType;
+  password2: string;
+  type: UserType;
 }

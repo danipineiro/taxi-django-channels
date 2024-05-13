@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <form [formGroup]="signupForm">
     <mat-form-field>
-      <input matInput placeholder="Email" formControlName="username" required>
+      <input matInput placeholder="Email" formControlName="email" required>
       <mat-error>
         Please provide a valid email address
       </mat-error>
@@ -10,7 +10,7 @@
 
     <mat-form-field>
       <mat-label>User type</mat-label>
-      <mat-select formControlName="user_type">
+      <mat-select formControlName="type">
         <mat-option [value]="passenger">Passenger</mat-option>
         <mat-option [value]="driver">Driver</mat-option>
       </mat-select>
@@ -24,8 +24,8 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword" required>
-      <mat-error *ngIf="signupForm.get('confirmPassword')?.errors">
+      <input matInput type="password" placeholder="Confirm Password" formControlName="password2" required>
+      <mat-error *ngIf="signupForm.get('password2')?.errors">
         Please provide a valid password
       </mat-error>
       <mat-error *ngIf="signupForm.hasError('notSame')">

@@ -19,7 +19,7 @@ export class AuthService {
   }
 
   register(registerDTO: RegisterDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, registerDTO);
+    return this.http.post(`${this.apiUrl}/signup/`, registerDTO);
   }
 
   logout() {
