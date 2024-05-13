@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'django_extensions',
+    'corsheaders',
 ]
 
 USER_APPS = [
@@ -53,6 +54,7 @@ USER_APPS = [
 INSTALLED_APPS += THIRD_PARTY_APPS + USER_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,3 +147,5 @@ MAIL_PROVIDER_KEY = None
 SMS_PROVIDER_KEY = None
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', default='redis://redis:6379/0')
+
+CORS_ALLOW_ALL_ORIGINS = True
