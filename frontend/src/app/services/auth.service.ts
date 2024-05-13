@@ -15,7 +15,7 @@ export class AuthService {
   }
 
   login(loginDTO: LoginDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signin`, loginDTO);
+    return this.http.post(`${this.apiUrl}/signin/`, loginDTO);
   }
 
   register(registerDTO: RegisterDTO): Observable<any> {
@@ -23,12 +23,36 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    return this.http.post(`${this.apiUrl}/logout`, {});
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
+    return this.http.post(`${this.apiUrl}/logout/`, {});
   }
 
   refreshToken() {
-    return this.http.post(`${this.apiUrl}/token/refresh/`, {});
+    const body = {
+      refresh: localStorage.getItem('refresh')
+    }
+    this.http.post(`${this.apiUrl}/token/refresh/`, body).subscribe({
+      next: (response: any) => {
+        this.setAccessToken(response.access);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
+
+  getAccessToken() {
+    return localStorage.getItem('access');
+  }
+
+  setAccessToken(token: string) {
+    localStorage.setItem('access', token);
+  }
+
+  setRefreshToken(token: string) {
+    localStorage.setItem('refresh', token);
+  }
+
 
 }

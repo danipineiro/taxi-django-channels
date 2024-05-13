@@ -1,19 +1,19 @@
 <mat-card>
   <mat-card-content>
-    <form>
+    <form [formGroup]="loginForm">
       <mat-form-field>
-        <input matInput placeholder="Email" name="username" required>
+        <input matInput placeholder="Email" name="email" formControlName="email" required>
         <mat-error>
           Please provide a valid email address
         </mat-error>
       </mat-form-field>
       <mat-form-field>
-        <input matInput type="password" placeholder="Password" name="password" required>
+        <input matInput type="password" placeholder="Password" name="password" formControlName="password" required>
         <mat-error>
           Please provide a valid password
         </mat-error>
       </mat-form-field>
-      <button mat-flat-button color="primary">Log In</button>
+      <button mat-flat-button color="primary" (click)="login()" [disabled]="!loginForm.valid">Log In</button>
 
       <mat-divider></mat-divider>
 
