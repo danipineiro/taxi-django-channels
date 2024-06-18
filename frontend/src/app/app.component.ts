@@ -29,15 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().subscribe({
-      next: (response: any) => {
-        console.log(response);
-        this.isLoggedIn = false;
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
