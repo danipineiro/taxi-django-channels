@@ -5,11 +5,12 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatIcon} from "@angular/material/icon";
 import {AuthService} from "./services/auth.service";
+import {MenuComponent} from "./components/menu/menu.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatSlideToggleModule, MatToolbar, MatIcon],
+  imports: [CommonModule, RouterOutlet, MatSlideToggleModule, MatToolbar, MatIcon, MenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -20,16 +21,10 @@ export class AppComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
   ) {
   }
 
   ngOnInit() {
     this.authService.loggedChanged$.subscribe(isLogged => this.isLoggedIn = isLogged);
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }
