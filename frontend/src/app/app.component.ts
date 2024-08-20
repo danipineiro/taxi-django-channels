@@ -21,10 +21,11 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router
-    ) {
+  ) {
   }
 
   ngOnInit() {
+    this.authService.loggedChanged$.subscribe(isLogged => this.isLoggedIn = isLogged);
     this.isLoggedIn = this.authService.isLogged();
   }
 
