@@ -6,9 +6,9 @@ import {MatCard, MatCardContent} from "@angular/material/card"
 import {MatButtonModule} from '@angular/material/button';
 import {MatDivider} from "@angular/material/divider";
 import {MatDialog} from "@angular/material/dialog";
-import {SignupComponent} from "../signup/signup.component";
-import {AuthService} from "../services/auth.service";
-import {LoginResponseDTO} from "../models/login-response-dto";
+import {SignupComponent} from "./signup/signup.component";
+import {AuthService} from "../../services/auth.service";
+import {LoginResponseDTO} from "../../models/login-response-dto";
 import {Router} from "@angular/router";
 
 

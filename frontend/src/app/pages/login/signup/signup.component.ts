@@ -13,9 +13,9 @@ import {
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
-import {DRIVER, PASSENGER} from "../shared/constants/user-types";
-import {RegisterDTO} from "../models/register-dto";
-import {AuthService} from "../services/auth.service";
+import {DRIVER, PASSENGER} from "../../../shared/constants/user-types";
+import {RegisterDTO} from "../../../models/register-dto";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-signup',
