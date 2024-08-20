@@ -5,6 +5,7 @@ import {NgIf} from "@angular/common";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
+import {CurrentUserDTO} from "../../models/current-user-dto";
 
 @Component({
   selector: 'app-menu',
@@ -19,6 +20,8 @@ import {UserService} from "../../services/user.service";
 })
 export class MenuComponent implements OnInit {
 
+  currentUser: CurrentUserDTO | undefined;
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
@@ -27,9 +30,12 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe((response: any) => {
-      console.log(response);
-    })
+    this.userService.getCurrentUser().subscribe({
+        next: (user: CurrentUserDTO) => {
+          this.currentUser = user;
+        },
+      }
+    )
   }
 
   logout() {
