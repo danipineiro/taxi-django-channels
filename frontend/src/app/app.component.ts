@@ -26,5 +26,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authService.loggedChanged$.subscribe(isLogged => this.isLoggedIn = isLogged);
+
+    this.isLoggedIn = this.authService.isLogged();
   }
 }
