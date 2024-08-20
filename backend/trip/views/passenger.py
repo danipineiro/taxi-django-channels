@@ -6,16 +6,19 @@ from trip.serializers import TripSerializer
 from user.permissions import IsPassenger
 
 
-class PassengerTripViewset(mixins.CreateModelMixin,
-                        mixins.ListModelMixin,
-                        mixins.RetrieveModelMixin,
-                        viewsets.GenericViewSet):
+class PassengerTripViewset(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     """
     A viewset for listing and retrieving trips for a driver.
     """
+
     serializer_class = TripSerializer
     permission_classes = (IsAuthenticated, IsPassenger)
-    lookup_field = 'id'
+    lookup_field = "id"
     queryset = Trip.objects.all()
 
     def get_queryset(self):

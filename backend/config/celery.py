@@ -4,14 +4,15 @@ import os
 from celery import Celery
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'joinup.settings.dev')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "joinup.settings.dev")
 
 app = Celery()
 app.conf.enable_utc = False
 
-app.config_from_object(settings, namespace='CELERY')
+app.config_from_object(settings, namespace="CELERY")
 
 app.autodiscover_tasks()
+
 
 @app.task(bind=True)
 def debug_task(self):

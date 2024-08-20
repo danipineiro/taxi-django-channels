@@ -9,41 +9,41 @@ from trip.serializers import TripSerializer
 from user.permissions import IsDriver
 
 
-class DriverTripViewset(mixins.ListModelMixin,
-                        mixins.RetrieveModelMixin,
-                        viewsets.GenericViewSet):
+class DriverTripViewset(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     """
     A viewset for listing and retrieving trips for a driver.
     """
+
     serializer_class = TripSerializer
     permission_classes = (IsAuthenticated, IsDriver)
-    lookup_field = 'id'
+    lookup_field = "id"
     queryset = Trip.objects.all()
 
     def get_queryset(self):
-        return (self.queryset
-                .select_related('driver', 'passenger')
-                .filter(Q(status=Trip.REQUESTED) | Q(driver=self.request.user))
-                )
+        return self.queryset.select_related("driver", "passenger").filter(
+            Q(status=Trip.REQUESTED) | Q(driver=self.request.user)
+        )
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def accept_trip(self, request, *args, **kwargs):
         trip = self.get_object()
         trip.status = Trip.ACCEPTED
         trip.driver = request.user
         trip.save()
-        return Response({'status': 'Trip accepted'})
+        return Response({"status": "Trip accepted"})
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def start_trip(self, request, *args, **kwargs):
         trip = self.get_object()
         trip.status = Trip.STARTED
         trip.save()
-        return Response({'status': 'Trip started'})
+        return Response({"status": "Trip started"})
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def complete_trip(self, request, *args, **kwargs):
         trip = self.get_object()
         trip.status = Trip.COMPLETED
         trip.save()
-        return Response({'status': 'Trip completed'})
+        return Response({"status": "Trip completed"})

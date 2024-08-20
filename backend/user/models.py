@@ -5,15 +5,13 @@ from common.models import TimeStampedModel
 from user.managers import CustomUserManager
 
 
-class User(AbstractBaseUser,
-           PermissionsMixin,
-           TimeStampedModel):
+class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
-    DRIVER = 'driver'
-    PASSENGER = 'passenger'
+    DRIVER = "driver"
+    PASSENGER = "passenger"
     USER_TYPE_CHOICES = (
-        (DRIVER, 'Driver'),
-        (PASSENGER, 'Passenger'),
+        (DRIVER, "Driver"),
+        (PASSENGER, "Passenger"),
     )
 
     username = None
@@ -25,7 +23,7 @@ class User(AbstractBaseUser,
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     def __str__(self):

@@ -13,10 +13,10 @@ logger = logging.getLogger(__name__)
 def send_welcome_email(user_email):
     try:
         email = EmailSender()
-        template = 'users/welcome_email.html'
+        template = "users/welcome_email.html"
         context = {
-            'name': user_email,
+            "name": user_email,
         }
-        email.send(user_email, 'Welcome to our platform', template, context)
+        email.send(user_email, "Welcome to our platform", template, context)
     except SoftTimeLimitExceeded:
-        logger.error(f'Time limit exceeded for {send_welcome_email.__name__} task')
+        logger.error(f"Time limit exceeded for {send_welcome_email.__name__} task")

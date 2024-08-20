@@ -16,7 +16,7 @@ def count_queries(func):
             logger.debug(query)
 
         num_queries = len(connection.queries)
-        logger.debug(f'Number of queries: {num_queries} for {func.__name__}')
+        logger.debug(f"Number of queries: {num_queries} for {func.__name__}")
 
         return result
 

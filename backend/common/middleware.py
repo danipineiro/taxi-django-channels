@@ -19,5 +19,7 @@ class QueryCountMiddleware:
         for query in connection.queries:
             logger.debug(query)
 
-        logger.debug(f"Number of queries: {len(connection.queries)}, Execution time: {total_time}")
+        logger.debug(
+            f"Number of queries: {len(connection.queries)}, Execution time: {total_time}"
+        )
         return response

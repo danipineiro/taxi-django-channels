@@ -1,3 +1,4 @@
 -r base.txt
 
 django-extensions==3.2.3
+black==24.8.0

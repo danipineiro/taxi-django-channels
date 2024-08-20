@@ -1,5 +1,6 @@
 from django.conf import settings
 
+
 class EmailSender:
     def __init__(self):
         self.mail_provider_key = settings.MAIL_PROVIDER_KEY

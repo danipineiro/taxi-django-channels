@@ -12,6 +12,7 @@ class IsDriver(permissions.BasePermission):
         # Check if the user is authenticated and is a driver
         return request.user.is_authenticated and request.user.type == User.DRIVER
 
+
 class IsPassenger(permissions.BasePermission):
     """
     Custom permission to only allow drivers to access the view.
