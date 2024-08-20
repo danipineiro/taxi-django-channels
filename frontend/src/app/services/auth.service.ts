@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {LoginDTO} from "../models/login-dto";
@@ -10,6 +10,8 @@ import {RegisterDTO} from "../models/register-dto";
 export class AuthService {
 
   private apiUrl = 'http://localhost:8000/api/v1';
+
+  loggedChanged$ = new EventEmitter<boolean>();
 
   constructor(private http: HttpClient) {
   }
@@ -25,6 +27,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    this.loggedChanged$.emit(false);
   }
 
   refreshToken() {
@@ -47,13 +50,14 @@ export class AuthService {
 
   setAccessToken(token: string) {
     localStorage.setItem('access', token);
+    this.loggedChanged$.emit(true);
   }
 
   setRefreshToken(token: string) {
     localStorage.setItem('refresh', token);
   }
 
-   isLogged() {
-     return !!localStorage.getItem('access');
-   }
+  isLogged() {
+    return !!localStorage.getItem('access');
+  }
 }
