@@ -1,7 +1,7 @@
 import logging
+from time import time
 
 from django.db import connection, reset_queries
-from time import time
 
 logger = logging.getLogger(__name__)
 

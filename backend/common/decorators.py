@@ -1,6 +1,7 @@
 import logging
-from django.db import connection, reset_queries
 from functools import wraps
+
+from django.db import connection, reset_queries
 
 logger = logging.getLogger(__name__)
 
