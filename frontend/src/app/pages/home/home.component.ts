@@ -4,19 +4,24 @@ import {TripService} from "../../services/trip.service";
 import {CurrentUserDTO} from "../../models/current-user-dto";
 import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
 import {UserService} from "../../services/user.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     MatAnchor,
-    MatButton
+    MatButton,
+    NgIf
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
   public trips: any[] = [];
+  protected readonly PASSENGER = PASSENGER;
+  protected readonly DRIVER = DRIVER;
+  currentUser!: CurrentUserDTO;
 
   constructor(
     private readonly tripService: TripService,
@@ -24,14 +29,23 @@ export class HomeComponent implements OnInit {
   ) {
   }
 
-    ngOnInit() {
-    this.userService.getCurrentUser().subscribe((user: CurrentUserDTO) => {
-      if (user.type === DRIVER) {
-        this.getDriverTrips();
-      } else if (user.type === PASSENGER) {
-        this.getPassengerTrips();
-      }
+  ngOnInit() {
+    this.userService.getCurrentUser().subscribe((user) => {
+      this.currentUser = user;
+      this.loadTrips();
     });
+  }
+
+  loadTrips() {
+    if (this.currentUser.type === DRIVER) {
+      this.tripService.getDriverTrips().subscribe((trips) => {
+        this.trips = trips;
+      });
+    } else if (this.currentUser.type === PASSENGER) {
+      this.tripService.getPassengerTrips().subscribe((trips) => {
+        this.trips = trips;
+      });
+    }
   }
 
   createTrip() {
@@ -40,16 +54,4 @@ export class HomeComponent implements OnInit {
     });
   }
 
-    getPassengerTrips() {
-    this.tripService.getPassengerTrips().subscribe((trips) => {
-      this.trips = trips;
-      console.log(trips);
-    });
-  }
-
-  getDriverTrips() {
-    this.tripService.getDriverTrips().subscribe((trips) => {
-      this.trips = trips;
-    });
-  }
 }
