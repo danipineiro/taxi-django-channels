@@ -18,9 +18,9 @@ import {NgIf} from "@angular/common";
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  public trips: any[] = [];
   protected readonly PASSENGER = PASSENGER;
-  protected readonly DRIVER = DRIVER;
+
+  public trips: any[] = [];
   currentUser!: CurrentUserDTO;
 
   constructor(
