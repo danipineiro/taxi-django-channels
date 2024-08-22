@@ -5,6 +5,7 @@ import {CurrentUserDTO} from "../../models/current-user-dto";
 import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
 import {UserService} from "../../services/user.service";
 import {NgIf} from "@angular/common";
+import {Trip} from "../../models/trip-dto";
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ import {NgIf} from "@angular/common";
 export class HomeComponent implements OnInit {
   protected readonly PASSENGER = PASSENGER;
 
-  public trips: any[] = [];
+  public trips: Trip[] = [];
   currentUser!: CurrentUserDTO;
 
   constructor(
@@ -38,11 +39,11 @@ export class HomeComponent implements OnInit {
 
   loadTrips() {
     if (this.currentUser.type === DRIVER) {
-      this.tripService.getDriverTrips().subscribe((trips) => {
+      this.tripService.getDriverTrips().subscribe((trips: Trip[]) => {
         this.trips = trips;
       });
     } else if (this.currentUser.type === PASSENGER) {
-      this.tripService.getPassengerTrips().subscribe((trips) => {
+      this.tripService.getPassengerTrips().subscribe((trips: Trip[]) => {
         this.trips = trips;
       });
     }
