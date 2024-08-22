@@ -27,6 +27,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    localStorage.removeItem('currentUser');
     this.loggedChanged$.emit(false);
   }
 
