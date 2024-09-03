@@ -16,4 +16,6 @@ export interface Trip {
   status: tripStatus;
   driver: string;
   passenger: string;
+  created: string;
+  modified: string;
 }

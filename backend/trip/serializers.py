@@ -18,8 +18,10 @@ class TripSerializer(serializers.ModelSerializer):
             "status",
             "driver",
             "passenger",
+            "created",
+            "modified"
         )
-        read_only_fields = ("id", "status", "driver", "passenger")
+        read_only_fields = ("id", "status", "driver", "passenger", "created", "modified")
 
     def get_driver(self, obj):
         if obj.driver is None:

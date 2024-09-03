@@ -10,6 +10,7 @@ class PassengerTripViewset(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     """
@@ -19,7 +20,7 @@ class PassengerTripViewset(
     serializer_class = TripSerializer
     permission_classes = (IsAuthenticated, IsPassenger)
     lookup_field = "id"
-    queryset = Trip.objects.all()
+    queryset = Trip.objects.all().order_by('-created')
 
     def get_queryset(self):
         return self.queryset.filter(passenger=self.request.user)

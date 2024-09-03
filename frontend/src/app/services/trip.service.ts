@@ -25,4 +25,8 @@ export class TripService {
     return this.http.get(`${this.apiUrl}driver/`);
   }
 
+  deleteTrip(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}passenger/${id}/`);
+  }
+
 }

@@ -4,8 +4,9 @@ import {TripService} from "../../services/trip.service";
 import {CurrentUserDTO} from "../../models/current-user-dto";
 import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
 import {UserService} from "../../services/user.service";
-import {NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {Trip} from "../../models/trip-dto";
+import {TripComponent} from "../trip/trip.component";
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,9 @@ import {Trip} from "../../models/trip-dto";
   imports: [
     MatAnchor,
     MatButton,
-    NgIf
+    NgIf,
+    TripComponent,
+    NgForOf
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -51,8 +54,13 @@ export class HomeComponent implements OnInit {
 
   createTrip() {
     this.tripService.createTrip().subscribe((trip) => {
-      console.log(trip);
+      this.loadTrips();
     });
   }
 
+  refreshTrips($event: boolean) {
+    if($event) {
+      this.loadTrips();
+    }
+  }
 }
