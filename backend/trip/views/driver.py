@@ -27,7 +27,7 @@ class DriverTripViewset(
         )
 
     @action(detail=True, methods=["post"])
-    def accept_trip(self, request, *args, **kwargs):
+    def accept(self, request, *args, **kwargs):
         trip = self.get_object()
         trip.status = Trip.ACCEPTED
         trip.driver = request.user
@@ -35,14 +35,14 @@ class DriverTripViewset(
         return Response({"status": "Trip accepted"})
 
     @action(detail=True, methods=["post"])
-    def start_trip(self, request, *args, **kwargs):
+    def start(self, request, *args, **kwargs):
         trip = self.get_object()
         trip.status = Trip.STARTED
         trip.save()
         return Response({"status": "Trip started"})
 
     @action(detail=True, methods=["post"])
-    def complete_trip(self, request, *args, **kwargs):
+    def complete(self, request, *args, **kwargs):
         trip = self.get_object()
         trip.status = Trip.COMPLETED
         trip.save()

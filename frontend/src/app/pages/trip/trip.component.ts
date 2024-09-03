@@ -26,6 +26,7 @@ export class TripComponent implements OnInit {
 
   protected readonly PASSENGER = PASSENGER;
   protected readonly DRIVER = DRIVER;
+  protected readonly tripStatus = tripStatus;
 
   constructor(
     private tripService: TripService
@@ -41,12 +42,22 @@ export class TripComponent implements OnInit {
     });
   }
 
-  acceptTrip() {}
+  acceptTrip() {
+    this.tripService.acceptTrip(this.trip.id).subscribe(() => {
+      this.loadTrips.emit(true);
+    });
+  }
 
-  startTrip() {}
+  startTrip() {
+    this.tripService.startTrip(this.trip.id).subscribe(() => {
+      this.loadTrips.emit(true);
+    });
+  }
 
-  completeTrip() {}
+  completeTrip() {
+    this.tripService.completeTrip(this.trip.id).subscribe(() => {
+      this.loadTrips.emit(true);
+    });
+  }
 
-
-  protected readonly tripStatus = tripStatus;
 }

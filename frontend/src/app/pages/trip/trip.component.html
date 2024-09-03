@@ -1,23 +1,27 @@
 <mat-card class="example-card" appearance="outlined">
   <mat-card-header>
-    <mat-card-title>Status: {{trip.status}}</mat-card-title>
-    <mat-card-subtitle>{{trip.created | date:'dd/MM/yyyy HH:mm' }}</mat-card-subtitle>
+    <mat-card-title>Status: {{ trip.status }}</mat-card-title>
+    <mat-card-subtitle>{{ trip.modified | date:'dd/MM/yyyy HH:mm' }}</mat-card-subtitle>
   </mat-card-header>
-    <mat-card-content>
-        <p *ngIf="trip.driver">Driver: {{trip.driver}}</p>
-    </mat-card-content>
+  <mat-card-content>
+    <p *ngIf="currentUser.type == PASSENGER && trip.driver">Driver: {{ trip.driver }}</p>
+    <p *ngIf="currentUser.type == DRIVER">Passenger: {{ trip.passenger }}</p>
+  </mat-card-content>
   <mat-card-actions>
     <div *ngIf="currentUser.type == PASSENGER">
-      <button *ngIf="trip.status == tripStatus.Requested" mat-button color="accent" (click)="deleteTrip()">Cancel</button>
+      <button *ngIf="trip.status == tripStatus.Requested" mat-button color="accent" (click)="deleteTrip()">Cancel
+      </button>
     </div>
     <div *ngIf="currentUser.type == DRIVER">
-      <button *ngIf="trip.status == tripStatus.Requested" mat-button color="primary" (click)="acceptTrip()">Accept</button>
+      <button *ngIf="trip.status == tripStatus.Requested" mat-button color="primary" (click)="acceptTrip()">Accept
+      </button>
     </div>
     <div *ngIf="currentUser.type == DRIVER">
       <button *ngIf="trip.status == tripStatus.Accepted" mat-button color="primary" (click)="startTrip()">Start</button>
     </div>
     <div *ngIf="currentUser.type == DRIVER">
-      <button *ngIf="trip.status == tripStatus.Started" mat-button color="primary" (click)="completeTrip()">Complete</button>
+      <button *ngIf="trip.status == tripStatus.Started" mat-button color="primary" (click)="completeTrip()">Complete
+      </button>
     </div>
   </mat-card-actions>
 </mat-card>

@@ -29,4 +29,16 @@ export class TripService {
     return this.http.delete(`${this.apiUrl}passenger/${id}/`);
   }
 
+  acceptTrip(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}driver/${id}/accept/`, {});
+  }
+
+  startTrip(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}driver/${id}/start/`, {});
+  }
+
+  completeTrip(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}driver/${id}/complete/`, {});
+  }
+
 }
