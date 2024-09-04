@@ -1,7 +1,15 @@
 <div class="main-home">
   <div class="example-button-row" *ngIf="currentUser.type == PASSENGER">
-    <button mat-raised-button (click)="createTrip()">New trip</button>
+    <button mat-raised-button
+            (click)="createTrip()"
+            [disabled]="disableCreateTrip">
+      New trip
+    </button>
   </div>
 
-  <app-trip *ngFor="let trip of trips" [trip]="trip" [currentUser]="currentUser" (loadTrips)="refreshTrips($event)" ></app-trip>
+  <app-trip *ngFor="let trip of trips"
+            [trip]="trip"
+            [currentUser]="currentUser"
+            (loadTrips)="refreshTrips($event)">
+  </app-trip>
 </div>

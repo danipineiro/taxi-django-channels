@@ -5,7 +5,7 @@ import {CurrentUserDTO} from "../../models/current-user-dto";
 import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
 import {UserService} from "../../services/user.service";
 import {NgForOf, NgIf} from "@angular/common";
-import {Trip} from "../../models/trip-dto";
+import {Trip, tripStatus} from "../../models/trip-dto";
 import {TripComponent} from "../trip/trip.component";
 
 @Component({
@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
 
   public trips: Trip[] = [];
   currentUser!: CurrentUserDTO;
+  disableCreateTrip = true;
 
   constructor(
     private readonly tripService: TripService,
@@ -48,6 +49,7 @@ export class HomeComponent implements OnInit {
     } else if (this.currentUser.type === PASSENGER) {
       this.tripService.getPassengerTrips().subscribe((trips: Trip[]) => {
         this.trips = trips;
+        this.disableCreteTrip();
       });
     }
   }
@@ -59,8 +61,17 @@ export class HomeComponent implements OnInit {
   }
 
   refreshTrips($event: boolean) {
-    if($event) {
+    if ($event) {
       this.loadTrips();
     }
+  }
+
+  /**
+   * This method is used to disable the creation of a new trip.
+   * It sets the `disableCreateTrip` property to `true` if there exists a trip that is either requested, started, or accepted.
+   * This is to ensure that a user cannot create a new trip if there is a trip that is already in one of these states.
+   */
+  disableCreteTrip() {
+    this.disableCreateTrip = this.trips.some((trip) => [tripStatus.Requested, tripStatus.Started, tripStatus.Accepted].includes(trip.status));
   }
 }
