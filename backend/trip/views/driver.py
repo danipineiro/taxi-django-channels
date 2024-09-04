@@ -19,7 +19,7 @@ class DriverTripViewset(
     serializer_class = TripSerializer
     permission_classes = (IsAuthenticated, IsDriver)
     lookup_field = "id"
-    queryset = Trip.objects.all()
+    queryset = Trip.objects.all().order_by("-modified")
 
     def get_queryset(self):
         return self.queryset.select_related("driver", "passenger").filter(
@@ -29,6 +29,11 @@ class DriverTripViewset(
     @action(detail=True, methods=["post"])
     def accept(self, request, *args, **kwargs):
         trip = self.get_object()
+        if trip.status != Trip.REQUESTED:
+            return Response(
+                {"status": "Trip has already been accepted or is not requested"},
+                status=400,
+            )
         trip.status = Trip.ACCEPTED
         trip.driver = request.user
         trip.save()
@@ -37,6 +42,13 @@ class DriverTripViewset(
     @action(detail=True, methods=["post"])
     def start(self, request, *args, **kwargs):
         trip = self.get_object()
+        if trip.status != Trip.ACCEPTED:
+            return Response(
+                {
+                    "status": "Trip has not been accepted yet or has already been started"
+                },
+                status=400,
+            )
         trip.status = Trip.STARTED
         trip.save()
         return Response({"status": "Trip started"})
@@ -44,6 +56,13 @@ class DriverTripViewset(
     @action(detail=True, methods=["post"])
     def complete(self, request, *args, **kwargs):
         trip = self.get_object()
+        if trip.status != Trip.STARTED:
+            return Response(
+                {
+                    "status": "Trip has not been started yet or has already been completed"
+                },
+                status=400,
+            )
         trip.status = Trip.COMPLETED
         trip.save()
         return Response({"status": "Trip completed"})

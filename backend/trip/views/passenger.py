@@ -20,7 +20,7 @@ class PassengerTripViewset(
     serializer_class = TripSerializer
     permission_classes = (IsAuthenticated, IsPassenger)
     lookup_field = "id"
-    queryset = Trip.objects.all().order_by('-created')
+    queryset = Trip.objects.all().order_by("-modified")
 
     def get_queryset(self):
         return self.queryset.filter(passenger=self.request.user)
