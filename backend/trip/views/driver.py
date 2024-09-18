@@ -1,3 +1,4 @@
+from IPython.core.display_functions import update_display
 from django.db.models import Q
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
@@ -36,7 +37,7 @@ class DriverTripViewset(
             )
         trip.status = Trip.ACCEPTED
         trip.driver = request.user
-        trip.save()
+        trip.save(update_fields=["status", "driver"])
         return Response({"status": "Trip accepted"})
 
     @action(detail=True, methods=["post"])
@@ -50,7 +51,7 @@ class DriverTripViewset(
                 status=400,
             )
         trip.status = Trip.STARTED
-        trip.save()
+        trip.save(update_fields=["status"])
         return Response({"status": "Trip started"})
 
     @action(detail=True, methods=["post"])
@@ -64,5 +65,5 @@ class DriverTripViewset(
                 status=400,
             )
         trip.status = Trip.COMPLETED
-        trip.save()
+        trip.save(update_fields=["status"])
         return Response({"status": "Trip completed"})
