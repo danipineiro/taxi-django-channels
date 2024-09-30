@@ -51,7 +51,7 @@ services:
 
   redis:
     container_name: redis
-    image: redis:6.0.8
+    image: redis:7.4.0
 
 volumes:
   postgres_data:
