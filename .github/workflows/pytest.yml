@@ -3,7 +3,7 @@ name: Run Pytest on Pull Requests
 on:
   pull_request:
     branches:
-      - main  # Ejecuta pytest cuando se crea una PR hacia la rama "main"
+      - master  # Ejecuta pytest cuando se crea una PR hacia la rama "main"
 
 jobs:
   test:
