@@ -1,0 +1,72 @@
+name: Run Pytest on Pull Requests
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.1"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/config/requirements/dev.txt
+
+      - name: Set Django Settings Module
+        run: echo "DJANGO_SETTINGS_MODULE=config.settings.dev" >> $GITHUB_ENV
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for Postgres...";
+            sleep 2;
+          done
+
+      - name: Set up Django
+        env:
+          SQL_ENGINE: django.db.backends.postgresql
+          SQL_DATABASE: test_db
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_HOST: localhost
+          SQL_PORT: 5432
+        run: |
+          python backend/manage.py migrate
+
+      - name: Run Pytest
+        env:
+          SQL_ENGINE: django.db.backends.postgresql
+          SQL_DATABASE: test_db
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_HOST: localhost
+          SQL_PORT: 5432
+        run: |
+          cd backend
+          pytest

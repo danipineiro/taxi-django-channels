@@ -12,9 +12,9 @@ import sys
 import psycopg2
 try:
     psycopg2.connect(
-        dbname="hello_django_dev",
-        user="hello_django",
-        password="hello_django",
+        dbname="test_db",
+        user="postgres",
+        password="postgres",
         host="postgres",
         port="5432",
     )
