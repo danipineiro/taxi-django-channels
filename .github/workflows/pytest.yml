@@ -39,8 +39,6 @@ jobs:
           pip install -r backend/config/requirements/dev.txt
 
       - name: Set up Django
-        env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
         run: |
           python backend/manage.py migrate  # Ejecuta las migraciones
 
