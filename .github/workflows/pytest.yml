@@ -39,7 +39,7 @@ jobs:
           pip install -r backend/config/requirements/dev.txt
 
       - name: Set Django Settings Module
-        run: echo "DJANGO_SETTINGS_MODULE=backend.config.settings.dev" >> $GITHUB_ENV
+        run: echo "DJANGO_SETTINGS_MODULE=config.settings.dev" >> $GITHUB_ENV
 
       - name: Wait for Postgres
         run: |
