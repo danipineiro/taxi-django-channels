@@ -31,18 +31,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"  # Cambia a la versión de Python que necesite tu proyecto
+          python-version: "3.12.1"  # Cambia a la versión de Python que necesite tu proyecto
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r backend/config/requirements/dev.txt
 
       - name: Set up Django
-        env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
         run: |
-          python manage.py migrate  # Ejecuta las migraciones
+          python backend/manage.py migrate  # Ejecuta las migraciones
 
       - name: Run Pytest
         env:
