@@ -39,6 +39,12 @@ jobs:
           pip install -r backend/config/requirements/dev.txt
 
       - name: Set up Django
+        env:
+          SQL_DATABASE: test_db
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_HOST: localhost
+          SQL_PORT: 5432
         run: |
           python backend/manage.py migrate  # Ejecuta las migraciones
 
