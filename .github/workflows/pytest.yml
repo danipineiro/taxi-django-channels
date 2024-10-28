@@ -3,7 +3,7 @@ name: Run Pytest on Pull Requests
 on:
   pull_request:
     branches:
-      - master  # Ejecuta pytest cuando se crea una PR hacia la rama "main"
+      - master
 
 jobs:
   test:
@@ -38,6 +38,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/config/requirements/dev.txt
 
+      - name: Set Django Settings Module
+        run: echo "DJANGO_SETTINGS_MODULE=backend.config.settings.dev" >> $GITHUB_ENV
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do
+            echo "Waiting for Postgres...";
+            sleep 2;
+          done
+
       - name: Set up Django
         env:
           SQL_ENGINE: django.db.backends.postgresql
@@ -51,5 +61,10 @@ jobs:
 
       - name: Run Pytest
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          SQL_ENGINE: django.db.backends.postgresql
+          SQL_DATABASE: test_db
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_HOST: localhost
+          SQL_PORT: 5432
         run: pytest
