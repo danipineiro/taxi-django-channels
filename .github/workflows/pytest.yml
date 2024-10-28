@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12.1"  # Cambia a la versión de Python que necesite tu proyecto
+          python-version: "3.12.1"
 
       - name: Install dependencies
         run: |
@@ -40,13 +40,14 @@ jobs:
 
       - name: Set up Django
         env:
+          SQL_ENGINE: django.db.backends.postgresql
           SQL_DATABASE: test_db
           SQL_USER: postgres
           SQL_PASSWORD: postgres
           SQL_HOST: localhost
           SQL_PORT: 5432
         run: |
-          python backend/manage.py migrate  # Ejecuta las migraciones
+          python backend/manage.py migrate
 
       - name: Run Pytest
         env:
