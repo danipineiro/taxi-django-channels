@@ -67,4 +67,6 @@ jobs:
           SQL_PASSWORD: postgres
           SQL_HOST: localhost
           SQL_PORT: 5432
-        run: pytest
+        run: |
+          cd backend
+          pytest
