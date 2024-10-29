@@ -25,4 +25,4 @@ jobs:
 
       - name: Run Black on backend
         run: |
-          black --check backend/
+          black --exclude migrations --check backend/
