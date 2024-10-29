@@ -31,4 +31,3 @@ def test_driver_can_not_create_trip():
     response = client.post("/api/v1/trip/passenger/")
 
     assert response.status_code == 403
-
