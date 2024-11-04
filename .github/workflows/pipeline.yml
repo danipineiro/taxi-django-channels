@@ -10,14 +10,14 @@ on:
 
 jobs:
   black:
-    uses: ./.github/workflows/black.yml
+    uses: ./.github/workflows/_black.yml
     with:
-      ref: master
+      ref: ${{ github.ref }}
 
   test:
-    uses: ./.github/workflows/pytest.yml
+    uses: ./.github/workflows/_pytest.yml
     with:
-      ref: master
+      ref: ${{ github.ref }}
 
   deploy:
     needs: [black, test]
