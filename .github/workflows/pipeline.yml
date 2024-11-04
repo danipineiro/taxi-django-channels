@@ -1,4 +1,4 @@
-name: Deploy
+name: Django Pipeline
 
 on:
   push:
