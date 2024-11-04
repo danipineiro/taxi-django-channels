@@ -1,5 +1,4 @@
-[![Pytest](https://github.com/danipineiro/taxi-django-channels/actions/workflows/pytest.yml/badge.svg)](https://github.com/danipineiro/taxi-django-channels/actions/workflows/pytest.yml)
-
+[![Django Pipeline](https://github.com/danipineiro/taxi-django-channels/actions/workflows/pipeline.yml/badge.svg?branch=master)](https://github.com/danipineiro/taxi-django-channels/actions/workflows/pipeline.yml)
 # Proyecto: Integración en Tiempo Real con Django Channels y Angular
 
 Este proyecto es una demostración de habilidades en el uso de **Django Channels** para la comunicación en tiempo real junto a **Angular** como frontend. Además, el proyecto se despliega con **Docker** para simplificar la configuración y ejecución.
