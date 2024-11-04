@@ -1,13 +1,15 @@
 name: Check Code Formatting with Black
 
 on:
-  pull_request:
-    branches:
-      - master
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
 
 jobs:
-  black:
-    runs-on: ubuntu-latest
+  check_code_formatting:
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Check out the code
