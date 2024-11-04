@@ -11,9 +11,13 @@ on:
 jobs:
   black:
     uses: ./.github/workflows/black.yml
+    with:
+      ref: master
 
   test:
     uses: ./.github/workflows/pytest.yml
+    with:
+      ref: master
 
   deploy:
     needs: [black, test]
