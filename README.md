@@ -1,7 +1,7 @@
-# Plantilla de proyecto Django: registro y login de usuarios
-Este es un proyecto de Django que se ejecuta en un entorno Docker.
+[![Pytest](https://github.com/danipineiro/taxi-django-channels/actions/workflows/pytest.yml/badge.svg)](https://github.com/danipineiro/taxi-django-channels/actions/workflows/pytest.yml)
 
-Se trata de una plantilla básica para un proyecto Django, donde ya se ha implementado el registro y el inicio de sesión de usuarios.
+# Integración en tiempo real con Django Channels y Angular
+Este proyecto demuestra una integración básica de Django Channels con Angular para mostrar habilidades en la implementación de websockets y comunicación en tiempo real
 
 ## Requisitos
 
