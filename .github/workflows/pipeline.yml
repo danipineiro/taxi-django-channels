@@ -11,14 +11,15 @@ on:
 jobs:
   black:
     uses: ./.github/workflows/black.yml
-    secrets: inherit
-    with:
-      ref: master
+
+  test:
+    uses: ./.github/workflows/pytest.yml
 
   deploy:
-    needs: black
-    runs-on: ubuntu-18.04
+    needs: [black, test]
+    runs-on: ubuntu-20.04
     steps:
       - name: Echo the message
+        if: ${{ github.event_name == 'push' }}
         run: |
           echo "deployed"
