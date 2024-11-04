@@ -21,12 +21,12 @@ jobs:
 
   deploy:
     needs: [black, test]
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Echo the message
-        if: ${{ github.event_name == 'push' }}
         run: |
           echo "deployed"
