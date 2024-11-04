@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  black:
+  check_code_formatting:
     runs-on: ubuntu-20.04
 
     steps:
