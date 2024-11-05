@@ -6,28 +6,27 @@ from user.tests.factories import PassengerFactory, DriverFactory
 
 
 @pytest.mark.django_db
-def test_passenger_can_create_trip():
-    user = PassengerFactory()
-    refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
+class TestTripCreation:
+    def setup_method(self):
+        self.client = APIClient()
 
-    client = APIClient()
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+    def authenticate_user(self, user):
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
-    response = client.post("/api/v1/trip/passenger/")
+    def test_passenger_can_create_trip(self):
+        user = PassengerFactory()
+        self.authenticate_user(user)
 
-    assert response.status_code == 201
+        response = self.client.post("/api/v1/trip/passenger/")
 
+        assert response.status_code == 201
 
-@pytest.mark.django_db
-def test_driver_can_not_create_trip():
-    user = DriverFactory()
-    refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
+    def test_driver_cannot_create_trip(self):
+        user = DriverFactory()
+        self.authenticate_user(user)
 
-    client = APIClient()
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        response = self.client.post("/api/v1/trip/passenger/")
 
-    response = client.post("/api/v1/trip/passenger/")
-
-    assert response.status_code == 403
+        assert response.status_code == 403
