@@ -2,6 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from trip.models import Trip
 from user.tests.factories import PassengerFactory, DriverFactory
 
 
@@ -30,3 +31,19 @@ class TestTripCreation:
         response = self.client.post("/api/v1/trip/passenger/")
 
         assert response.status_code == 403
+
+    def test_passenger_trip_creation_returns_correct_fields(self):
+        user = PassengerFactory()
+        self.authenticate_user(user)
+
+        response = self.client.post("/api/v1/trip/passenger/")
+
+        assert response.status_code == 201
+
+        expected_fields = {"id", "status", "driver", "passenger", "created", "modified"}
+        response_data = response.json()
+
+        assert expected_fields <= response_data.keys()
+        assert response_data["status"] == Trip.REQUESTED
+        assert response_data["passenger"] == user.email
+        assert response_data["driver"] is None
