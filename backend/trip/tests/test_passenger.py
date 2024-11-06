@@ -12,6 +12,15 @@ from user.tests.factories import PassengerFactory, DriverFactory
 class TestTripCreation(BaseTestAPI):
 
     def test_passenger_can_create_trip(self):
+        """
+        Test that a passenger can create a trip.
+
+        This test creates a passenger and authenticates them.
+        It then makes a POST request to create a trip and verifies that the response status is 201 (Created).
+
+        Assertions:
+        - The response status code is 201 (Created).
+        """
         user = PassengerFactory()
         self.authenticate_user(user)
 
@@ -20,6 +29,15 @@ class TestTripCreation(BaseTestAPI):
         assert response.status_code == 201
 
     def test_driver_cannot_create_trip(self):
+        """
+        Test that a driver cannot create a trip.
+
+        This test creates a driver and authenticates them.
+        It then makes a POST request to create a trip and verifies that the response status is 403 (Forbidden).
+
+        Assertions:
+        - The response status code is 403 (Forbidden).
+        """
         user = DriverFactory()
         self.authenticate_user(user)
 
@@ -28,6 +46,20 @@ class TestTripCreation(BaseTestAPI):
         assert response.status_code == 403
 
     def test_passenger_trip_creation_returns_correct_fields(self):
+        """
+        Test that the trip creation for a passenger returns the correct fields.
+
+        This test creates a passenger and authenticates them.
+        It then makes a POST request to create a trip and verifies that the response status is 201 (Created).
+        The test also checks that the response contains the expected fields with correct values.
+
+        Assertions:
+        - The response status code is 201 (Created).
+        - The response contains the expected fields.
+        - The status of the trip in the response is 'REQUESTED'.
+        - The passenger in the response matches the authenticated passenger.
+        - The driver in the response is None.
+        """
         user = PassengerFactory()
         self.authenticate_user(user)
 
@@ -48,6 +80,19 @@ class TestTripCreation(BaseTestAPI):
 class TestTripList(BaseTestAPI):
 
     def test_passenger_cannot_list_other_passenger_trips(self):
+        """
+        Test that a passenger cannot list trips of other passengers.
+
+        This test creates two passengers and two trips, one for each passenger.
+        It then authenticates the first passenger and makes a GET request to list trips.
+        The test verifies that only the trip of the authenticated passenger is returned.
+
+        Assertions:
+        - The total number of trips in the database is 2.
+        - The response status code is 200 (OK).
+        - The response contains only one trip.
+        - The trip in the response belongs to the authenticated passenger.
+        """
         user = PassengerFactory()
         user_2 = PassengerFactory()
 
@@ -65,6 +110,21 @@ class TestTripList(BaseTestAPI):
             assert trip["passenger"] == user.email
 
     def test_passenger_list_trips_correct_fields(self):
+        """
+        Test that the trip list for a passenger contains the correct fields.
+
+        This test creates a passenger and a trip for that passenger.
+        It then authenticates the passenger and makes a GET request to list trips.
+        The test verifies that the response status is 200 and that the response
+        contains the expected fields with correct values.
+
+        Assertions:
+        - The response status code is 200 (OK).
+        - The response contains the expected fields.
+        - The status of the trip in the response matches the created trip.
+        - The passenger in the response matches the authenticated passenger.
+        - The driver in the response is None.
+        """
         user = PassengerFactory()
         self.authenticate_user(user)
 
@@ -125,6 +185,16 @@ class TestTripList(BaseTestAPI):
 class TestTripDeletion(BaseTestAPI):
 
     def test_passenger_delete_requested_trip(self):
+        """
+        Test that a passenger can delete a trip with status 'REQUESTED'.
+
+        This test creates a passenger and a trip with status 'REQUESTED' for that passenger.
+        It then authenticates the passenger and makes a DELETE request to delete the trip.
+        The test verifies that the response status is 204 (No Content).
+
+        Assertions:
+        - The response status code is 204 (No Content).
+        """
         user = PassengerFactory()
         self.authenticate_user(user)
 
@@ -132,7 +202,19 @@ class TestTripDeletion(BaseTestAPI):
         response = self.client.delete(f"/api/v1/trip/passenger/{trip.id}/")
         assert response.status_code == 204
 
-    def test_passenger_cannot_delete_trip_status_different_requested(self):
+    def test_passenger_cannot_delete_non_requested_trip(self):
+        """
+        Test that a passenger cannot delete a trip if its status is different from 'REQUESTED'.
+
+        This test creates a passenger and authenticates them.
+        It then creates trips with different statuses ('ACCEPTED', 'STARTED', 'COMPLETED') for that passenger.
+        For each trip, it makes a DELETE request and verifies that the response status is 400 (Bad Request).
+
+        Assertions:
+        - The response status code is 400 (Bad Request) for trips with status 'ACCEPTED'.
+        - The response status code is 400 (Bad Request) for trips with status 'STARTED'.
+        - The response status code is 400 (Bad Request) for trips with status 'COMPLETED'.
+        """
         user = PassengerFactory()
         self.authenticate_user(user)
 
