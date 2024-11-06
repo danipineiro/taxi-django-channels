@@ -79,7 +79,7 @@ class TestTripCreation(BaseTestAPI):
 @pytest.mark.django_db
 class TestTripList(BaseTestAPI):
 
-    def test_passenger_cannot_list_other_passenger_trips(self):
+    def test_passenger_can_only_list_own_trips(self):
         """
         Test that a passenger cannot list trips of other passengers.
 
@@ -109,7 +109,7 @@ class TestTripList(BaseTestAPI):
         for trip in response.json():
             assert trip["passenger"] == user.email
 
-    def test_passenger_list_trips_correct_fields(self):
+    def test_trip_list_contains_correct_fields_for_passenger(self):
         """
         Test that the trip list for a passenger contains the correct fields.
 
@@ -229,3 +229,84 @@ class TestTripDeletion(BaseTestAPI):
         trip = TripFactory(passenger=user, status=Trip.COMPLETED)
         response = self.client.delete(f"/api/v1/trip/passenger/{trip.id}/")
         assert response.status_code == 400
+
+
+@pytest.mark.django_db
+class TestTripRetrive(BaseTestAPI):
+
+    def test_passenger_can_retrieve_own_trip(self):
+        """
+        Test that a passenger can retrieve their own trip.
+
+        This test creates a passenger and a trip for that passenger.
+        It then authenticates the passenger and makes a GET request to retrieve the trip.
+        The test verifies that the response status is 200 (OK) and that the trip belongs to the authenticated passenger.
+
+        Assertions:
+        - The response status code is 200 (OK).
+        - The trip in the response belongs to the authenticated passenger.
+        """
+        user = PassengerFactory()
+        self.authenticate_user(user)
+
+        trip = TripFactory(passenger=user)
+        response = self.client.get(f"/api/v1/trip/passenger/{trip.id}/")
+
+        assert response.status_code == 200
+        assert response.json()["passenger"] == user.email
+
+    def test_passenger_cannot_retrieve_other_passenger_trip(self):
+        """
+        Test that a passenger cannot retrieve a trip of another passenger.
+
+        This test creates two passengers and a trip for each passenger.
+        It then authenticates the first passenger and makes a GET request to retrieve the trip of the second passenger.
+        The test verifies that the response status is 404 (Not Found).
+
+        Assertions:
+        - The response status code is 404 (Not Found).
+        """
+        user = PassengerFactory()
+        user_2 = PassengerFactory()
+
+        trip = TripFactory(passenger=user)
+        trip_2 = TripFactory(passenger=user_2)
+
+        assert Trip.objects.count() == 2
+
+        self.authenticate_user(user)
+        response = self.client.get(f"/api/v1/trip/passenger/{trip_2.id}/")
+
+        assert response.status_code == 404
+
+    def test_trip_detail_contains_expected_fields(self):
+        """
+        Test that the trip retrieve for a passenger contains the correct fields.
+
+        This test creates a passenger and a trip for that passenger.
+        It then authenticates the passenger and makes a GET request to retrieve the trip.
+        The test verifies that the response status is 200 and that the response contains the expected fields with correct values.
+
+        Assertions:
+        - The response status code is 200 (OK).
+        - The response contains the expected fields.
+        - The status of the trip in the response matches the created trip.
+        - The passenger in the response matches the authenticated passenger.
+        - The driver in the response is None.
+        """
+        user = PassengerFactory()
+        self.authenticate_user(user)
+
+        trip = TripFactory(passenger=user)
+
+        response = self.client.get(f"/api/v1/trip/passenger/{trip.id}/")
+
+        assert response.status_code == 200
+
+        expected_fields = {"id", "status", "driver", "passenger", "created", "modified"}
+        response_data = response.json()
+
+        assert expected_fields <= response_data.keys()
+        assert response_data["status"] == trip.status
+        assert response_data["passenger"] == user.email
+        assert response_data["driver"] is None
