@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import ValidationError
 
 from trip.models import Trip
 from trip.serializers import TripSerializer
@@ -27,3 +28,9 @@ class PassengerTripViewset(
 
     def perform_create(self, serializer):
         serializer.save(passenger=self.request.user)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.status != Trip.REQUESTED:
+            raise ValidationError(f"You can only delete trips in the {Trip.REQUESTED} state.")
+        return super().destroy(request, *args, **kwargs)

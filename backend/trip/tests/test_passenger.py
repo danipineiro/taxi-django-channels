@@ -119,3 +119,30 @@ class TestTripList(BaseTestAPI):
             f"Expected the same or fewer queries, but got {num_queries_with_two_trips} for two trips "
             f"and {num_queries_with_three_trips} for three trips."
         )
+
+@pytest.mark.django_db
+class TestTripDeletion(BaseTestAPI):
+
+    def test_passenger_delete_requested_trip(self):
+        user = PassengerFactory()
+        self.authenticate_user(user)
+
+        trip = TripFactory(passenger=user, status=Trip.REQUESTED)
+        response = self.client.delete(f"/api/v1/trip/passenger/{trip.id}/")
+        assert response.status_code == 204
+
+    def test_passenger_cannot_delete_trip_status_different_requested(self):
+        user = PassengerFactory()
+        self.authenticate_user(user)
+
+        trip = TripFactory(passenger=user, status=Trip.ACCEPTED)
+        response = self.client.delete(f"/api/v1/trip/passenger/{trip.id}/")
+        assert response.status_code == 400
+
+        trip = TripFactory(passenger=user, status=Trip.STARTED)
+        response = self.client.delete(f"/api/v1/trip/passenger/{trip.id}/")
+        assert response.status_code == 400
+
+        trip = TripFactory(passenger=user, status=Trip.COMPLETED)
+        response = self.client.delete(f"/api/v1/trip/passenger/{trip.id}/")
+        assert response.status_code == 400
