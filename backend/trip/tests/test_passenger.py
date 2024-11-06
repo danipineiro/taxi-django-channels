@@ -1,6 +1,6 @@
 import pytest
-from django.test.utils import CaptureQueriesContext
-from django.db import connection
+from django.test.utils import CaptureQueriesContext, override_settings
+from django.db import connection, reset_queries
 
 from common.tests.utils import BaseTestAPI
 from trip.models import Trip
@@ -94,16 +94,12 @@ class TestTripList(BaseTestAPI):
         self.authenticate_user(user)
 
         TripFactory(passenger=user)
-
         with CaptureQueriesContext(connection) as queries_with_one_trip:
             response = self.client.get("/api/v1/trip/passenger/")
             assert response.status_code == 200
             assert len(response.json()) == 1
 
-        num_queries_with_one_trip = len(queries_with_one_trip)
-
         TripFactory(passenger=user)
-
         with CaptureQueriesContext(connection) as queries_with_two_trips:
             response = self.client.get("/api/v1/trip/passenger/")
             assert response.status_code == 200
@@ -111,7 +107,15 @@ class TestTripList(BaseTestAPI):
 
         num_queries_with_two_trips = len(queries_with_two_trips)
 
-        assert num_queries_with_two_trips <= num_queries_with_one_trip, (
-            f"Expected the same or fewer queries, but got {num_queries_with_one_trip} for one trip "
-            f"and {num_queries_with_two_trips} for two trips."
+        TripFactory(passenger=user)
+        with CaptureQueriesContext(connection) as queries_with_three_trips:
+            response = self.client.get("/api/v1/trip/passenger/")
+            assert response.status_code == 200
+            assert len(response.json()) == 3
+
+        num_queries_with_three_trips = len(queries_with_three_trips)
+
+        assert num_queries_with_two_trips == num_queries_with_three_trips, (
+            f"Expected the same or fewer queries, but got {num_queries_with_two_trips} for two trips "
+            f"and {num_queries_with_three_trips} for three trips."
         )
