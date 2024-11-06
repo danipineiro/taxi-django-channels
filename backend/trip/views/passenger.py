@@ -32,5 +32,7 @@ class PassengerTripViewset(
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         if instance.status != Trip.REQUESTED:
-            raise ValidationError(f"You can only delete trips in the {Trip.REQUESTED} state.")
+            raise ValidationError(
+                f"You can only delete trips in the {Trip.REQUESTED} state."
+            )
         return super().destroy(request, *args, **kwargs)

@@ -120,6 +120,7 @@ class TestTripList(BaseTestAPI):
             f"and {num_queries_with_three_trips} for three trips."
         )
 
+
 @pytest.mark.django_db
 class TestTripDeletion(BaseTestAPI):
 
