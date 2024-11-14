@@ -43,9 +43,9 @@ class TestTripList(BaseTestAPI):
         assert response.status_code == 200
         assert len(response.json()) == 2
         for trip in response.json():
-            assert trip["status"] == Trip.REQUESTED or trip["driver"] == driver.email, (
-                f"Unexpected trip found: status={trip['status']}, driver={trip['driver']}"
-            )
+            assert (
+                trip["status"] == Trip.REQUESTED or trip["driver"] == driver.email
+            ), f"Unexpected trip found: status={trip['status']}, driver={trip['driver']}"
 
     def test_trip_list_contains_correct_fields_for_driver(self):
         """
