@@ -125,3 +125,51 @@ class TestTripList(BaseTestAPI):
             f"Expected the same or fewer queries, but got {num_queries_with_two_trips} for two trips "
             f"and {num_queries_with_three_trips} for three trips."
         )
+
+
+@pytest.mark.django_db
+class TestTripActions(BaseTestAPI):
+
+    def test_driver_accept_trips(self):
+        """
+        Test that a driver can accept trips with status 'REQUESTED' and cannot accept trips with other statuses.
+
+        This test creates a driver and a passenger, and then creates trips with different statuses.
+        It authenticates the driver and makes POST requests to accept the trips.
+        The test verifies that the driver can accept trips with status 'REQUESTED' and receives a 200 response.
+        It also verifies that the driver cannot accept trips with statuses 'ACCEPTED', 'STARTED', or 'COMPLETED' and receives a 400 response for each.
+
+        Assertions:
+        - The response status code is 200 for accepting a trip with status 'REQUESTED'.
+        - The trip status is updated to 'ACCEPTED' and the driver is assigned to the trip.
+        - The response status code is 400 for attempting to accept trips with statuses 'ACCEPTED', 'STARTED', or 'COMPLETED'.
+        """
+        driver = DriverFactory()
+        passenger = PassengerFactory()
+        trip = TripFactory(passenger=passenger, status=Trip.REQUESTED)
+
+        self.authenticate_user(driver)
+        response = self.client.post(f"/api/v1/trip/driver/{trip.id}/accept/")
+
+        assert response.status_code == 200
+        trip.refresh_from_db()
+        assert trip.status == Trip.ACCEPTED
+        assert trip.driver == driver
+
+        trip_acepted = TripFactory(
+            passenger=passenger, driver=driver, status=Trip.ACCEPTED
+        )
+        response = self.client.post(f"/api/v1/trip/driver/{trip_acepted.id}/accept/")
+        assert response.status_code == 400
+
+        trip_started = TripFactory(
+            passenger=passenger, driver=driver, status=Trip.STARTED
+        )
+        response = self.client.post(f"/api/v1/trip/driver/{trip_started.id}/accept/")
+        assert response.status_code == 400
+
+        trip_complete = TripFactory(
+            passenger=passenger, driver=driver, status=Trip.COMPLETED
+        )
+        response = self.client.post(f"/api/v1/trip/driver/{trip_complete.id}/accept/")
+        assert response.status_code == 400
