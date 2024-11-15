@@ -156,20 +156,9 @@ class TestTripActions(BaseTestAPI):
         assert trip.status == Trip.ACCEPTED
         assert trip.driver == driver
 
-        trip_acepted = TripFactory(
-            passenger=passenger, driver=driver, status=Trip.ACCEPTED
-        )
-        response = self.client.post(f"/api/v1/trip/driver/{trip_acepted.id}/accept/")
-        assert response.status_code == 400
-
-        trip_started = TripFactory(
-            passenger=passenger, driver=driver, status=Trip.STARTED
-        )
-        response = self.client.post(f"/api/v1/trip/driver/{trip_started.id}/accept/")
-        assert response.status_code == 400
-
-        trip_complete = TripFactory(
-            passenger=passenger, driver=driver, status=Trip.COMPLETED
-        )
-        response = self.client.post(f"/api/v1/trip/driver/{trip_complete.id}/accept/")
-        assert response.status_code == 400
+        for status in [Trip.ACCEPTED, Trip.STARTED, Trip.COMPLETED]:
+            trip = TripFactory(passenger=passenger, driver=driver, status=status)
+            response = self.client.post(f"/api/v1/trip/driver/{trip.id}/accept/")
+            trip.refresh_from_db()
+            assert trip.status == status
+            assert response.status_code == 400
