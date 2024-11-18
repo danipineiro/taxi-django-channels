@@ -162,3 +162,69 @@ class TestTripActions(BaseTestAPI):
             trip.refresh_from_db()
             assert trip.status == status
             assert response.status_code == 400
+
+    def test_driver_start_trips(self):
+        """
+        Test that a driver can start trips with status 'ACCEPTED' and cannot start trips with other statuses.
+
+        This test creates a driver and a passenger, and then creates a trip with status 'ACCEPTED'.
+        It authenticates the driver and makes a POST request to start the trip.
+        The test verifies that the driver can start the trip with status 'ACCEPTED' and receives a 200 response.
+        It also verifies that the driver cannot start trips with statuses 'REQUESTED', 'STARTED', or 'COMPLETED' and receives a 400 response for each.
+
+        Assertions:
+        - The response status code is 200 for starting a trip with status 'ACCEPTED'.
+        - The trip status is updated to 'STARTED' and the driver is assigned to the trip.
+        - The response status code is 400 for attempting to start trips with statuses 'REQUESTED', 'STARTED', or 'COMPLETED'.
+        """
+        driver = DriverFactory()
+        passenger = PassengerFactory()
+        trip = TripFactory(passenger=passenger, status=Trip.ACCEPTED, driver=driver)
+
+        self.authenticate_user(driver)
+        response = self.client.post(f"/api/v1/trip/driver/{trip.id}/start/")
+
+        assert response.status_code == 200
+        trip.refresh_from_db()
+        assert trip.status == Trip.STARTED
+        assert trip.driver == driver
+
+        for status in [Trip.REQUESTED, Trip.STARTED, Trip.COMPLETED]:
+            trip = TripFactory(passenger=passenger, driver=driver, status=status)
+            response = self.client.post(f"/api/v1/trip/driver/{trip.id}/start/")
+            trip.refresh_from_db()
+            assert trip.status == status
+            assert response.status_code == 400
+
+    def test_driver_complete_trips(self):
+        """
+        Test that a driver can complete trips with status 'STARTED' and cannot complete trips with other statuses.
+
+        This test creates a driver and a passenger, and then creates a trip with status 'STARTED'.
+        It authenticates the driver and makes a POST request to complete the trip.
+        The test verifies that the driver can complete the trip with status 'STARTED' and receives a 200 response.
+        It also verifies that the driver cannot complete trips with statuses 'REQUESTED', 'ACCEPTED', or 'COMPLETED' and receives a 400 response for each.
+
+        Assertions:
+        - The response status code is 200 for completing a trip with status 'STARTED'.
+        - The trip status is updated to 'COMPLETED' and the driver is assigned to the trip.
+        - The response status code is 400 for attempting to complete trips with statuses 'REQUESTED', 'ACCEPTED', or 'COMPLETED'.
+        """
+        driver = DriverFactory()
+        passenger = PassengerFactory()
+        trip = TripFactory(passenger=passenger, status=Trip.STARTED, driver=driver)
+
+        self.authenticate_user(driver)
+        response = self.client.post(f"/api/v1/trip/driver/{trip.id}/complete/")
+
+        assert response.status_code == 200
+        trip.refresh_from_db()
+        assert trip.status == Trip.COMPLETED
+        assert trip.driver == driver
+
+        for status in [Trip.REQUESTED, Trip.ACCEPTED, Trip.COMPLETED]:
+            trip = TripFactory(passenger=passenger, driver=driver, status=status)
+            response = self.client.post(f"/api/v1/trip/driver/{trip.id}/complete/")
+            trip.refresh_from_db()
+            assert trip.status == status
+            assert response.status_code == 400
