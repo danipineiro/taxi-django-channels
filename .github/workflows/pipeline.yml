@@ -35,9 +35,6 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: eu-north-1
       
-      - name: Get commit hash
-        id: get-commit-hash
-        run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
       
       - name: Echo the message
         run: |
