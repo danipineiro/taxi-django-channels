@@ -3,10 +3,12 @@ name: Django Pipeline
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches:
-      - "**"
+      - "**" # staging
+
+  create:
+    tags:
+      - "v*" # production
+
 
 jobs:
   black:
@@ -21,7 +23,7 @@ jobs:
 
   deploy:
     needs: [black, test]
-    #if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'create' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
