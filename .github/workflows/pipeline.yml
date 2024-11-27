@@ -22,13 +22,19 @@ jobs:
       ref: ${{ github.ref }}
 
   deploy:
-    needs: [black, test]
-    if: ${{ github.event_name == 'create' }}
+#    needs: [black, test]
+#    if: ${{ github.event_name == 'create' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Get tag name
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Tag created: $TAG_NAME"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4.0.2
