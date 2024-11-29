@@ -1,0 +1,56 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+      - master # staging
+
+  create:
+    tags:
+      - "v*" # production
+
+
+jobs:
+  black:
+    uses: ./.github/workflows/_black.yml
+    with:
+      ref: ${{ github.ref }}
+
+  test:
+    uses: ./.github/workflows/_pytest.yml
+    with:
+      ref: ${{ github.ref }}
+
+  deploy:
+    needs: [black, test]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get tag name
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Tag created: $TAG_NAME"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: eu-north-1
+      
+      - name: Amazon ECR "Login" Action for GitHub Actions
+        uses: aws-actions/amazon-ecr-login@v2.0.1
+
+      - name: Deploy to environment
+        run: |
+          if [ "${{ github.event_name }}" == "create" ]; then
+            echo "Deploying to production with tag $TAG_NAME"
+            # Aquí comandos para producción con tag
+          else
+            echo "Deploying to staging"
+            # Aquí comandos para staging
+          fi
