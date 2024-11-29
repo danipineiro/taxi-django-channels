@@ -1,9 +1,9 @@
-name: Django Pipeline
+name: Continuous Delivery
 
 on:
   push:
     branches:
-      - "**" # staging
+      - master # staging
 
   create:
     tags:
@@ -22,8 +22,7 @@ jobs:
       ref: ${{ github.ref }}
 
   deploy:
-#    needs: [black, test]
-#    if: ${{ github.event_name == 'create' }}
+    needs: [black, test]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -45,7 +44,13 @@ jobs:
       
       - name: Amazon ECR "Login" Action for GitHub Actions
         uses: aws-actions/amazon-ecr-login@v2.0.1
-      
-      - name: Echo the message
+
+      - name: Deploy to environment
         run: |
-          echo "deployed"
+          if [ "${{ github.event_name }}" == "create" ]; then
+            echo "Deploying to production with tag $TAG_NAME"
+            # Aquí comandos para producción con tag
+          else
+            echo "Deploying to staging"
+            # Aquí comandos para staging
+          fi
