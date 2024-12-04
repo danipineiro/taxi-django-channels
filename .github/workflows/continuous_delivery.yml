@@ -61,4 +61,4 @@ jobs:
           docker build -t django:$IMAGE_TAG -f backend/Dockerfile backend
           
           # Push the Docker image to the ECR repository
-          docker push ${{ secrets.AWS_ECR_URL }}:$IMAGE_TAG
+          docker push django:$IMAGE_TAG
