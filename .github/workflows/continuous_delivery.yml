@@ -45,20 +45,12 @@ jobs:
       - name: Amazon ECR "Login" Action for GitHub Actions
         uses: aws-actions/amazon-ecr-login@v2.0.1
 
-      - name: Build and Push Docker Image
+      - name: Deploy to environment
         run: |
-          # Define Docker image name and tag based on the environment
           if [ "${{ github.event_name }}" == "create" ]; then
-            IMAGE_TAG="$TAG_NAME"  # Tag con la versión
-            ENVIRONMENT="production"
+            echo "Deploying to production with tag $TAG_NAME"
+            # Aquí comandos para producción con tag
           else
-            IMAGE_TAG="latest"  # Para staging
-            ENVIRONMENT="staging"
+            echo "Deploying to staging"
+            # Aquí comandos para staging
           fi
-          echo "Building Docker image for $ENVIRONMENT environment"
-          
-          # Build the Docker image
-          docker build -t $AWS_ECR_URL/django:$IMAGE_TAG -f backend/Dockerfile backend
-          
-          # Push the Docker image to the ECR repository
-          docker push $AWS_ECR_URL/django:$IMAGE_TAG
