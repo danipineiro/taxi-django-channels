@@ -58,7 +58,7 @@ jobs:
           echo "Building Docker image for $ENVIRONMENT environment"
           
           # Build the Docker image
-          docker build -t $AWS_ECR_URL/django:$IMAGE_TAG -f backend/Dockerfile backend
+          docker build -t ${{ secrets.AWS_ECR_URL }}/django:$IMAGE_TAG -f backend/Dockerfile backend
           
           # Push the Docker image to the ECR repository
-          docker push $AWS_ECR_URL/django:$IMAGE_TAG
+          docker push ${{ secrets.AWS_ECR_URL }}/django:$IMAGE_TAG
