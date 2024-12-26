@@ -39,11 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "rest_framework",
-    "django_extensions",
-    "corsheaders",
-]
+THIRD_PARTY_APPS = ["rest_framework", "django_extensions", "corsheaders", "channels"]
 
 USER_APPS = ["common", "user", "trip"]
 
@@ -79,6 +75,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
+
+ASGI_APPLICATION = "config.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -145,3 +143,12 @@ SMS_PROVIDER_KEY = None
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", default="redis://redis:6379/0")
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379 / 1)],
+        },
+    },
+}
