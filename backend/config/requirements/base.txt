@@ -1,9 +1,9 @@
-Django==5.1.2
+Django==5.1.4
 djangorestframework==3.15.2
 djangorestframework-simplejwt==5.3.1
-environs==11.0.0
+environs==11.2.1
 psycopg2-binary
-ipython==8.29.0
+ipython==8.31.0
 celery==5.4.0
-redis==5.2.0
+redis==5.2.1
 django-cors-headers==4.6.0

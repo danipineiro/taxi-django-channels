@@ -2,11 +2,11 @@
 
 django-extensions==3.2.3
 black==24.10.0
-faker==30.8.2
+faker==33.1.0
 freezegun==1.5.1
 model-bakery==1.20.0
 factory_boy==3.3.1
-pytest==8.3.3
+pytest==8.3.4
 pytest-cov==6.0.0
 pytest-django==4.9.0
 pytest-mock==3.14.0
