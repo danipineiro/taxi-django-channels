@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Input, input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Trip, tripStatus} from "../../models/trip-dto";
-import {MatButton, MatButtonModule} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {DatePipe, NgIf} from "@angular/common";
 import {TripService} from "../../services/trip.service";
 import {CurrentUserDTO} from "../../models/current-user-dto";
 import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
+
 
 @Component({
   selector: 'app-trip',
@@ -22,7 +23,6 @@ import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
 export class TripComponent implements OnInit {
   @Input() trip!: Trip;
   @Input() currentUser!: CurrentUserDTO;
-  @Output() loadTrips = new EventEmitter<boolean>();
 
   protected readonly PASSENGER = PASSENGER;
   protected readonly DRIVER = DRIVER;
@@ -38,25 +38,21 @@ export class TripComponent implements OnInit {
 
   deleteTrip() {
     this.tripService.deleteTrip(this.trip.id).subscribe(() => {
-      this.loadTrips.emit(true);
     });
   }
 
   acceptTrip() {
     this.tripService.acceptTrip(this.trip.id).subscribe(() => {
-      this.loadTrips.emit(true);
     });
   }
 
   startTrip() {
     this.tripService.startTrip(this.trip.id).subscribe(() => {
-      this.loadTrips.emit(true);
     });
   }
 
   completeTrip() {
     this.tripService.completeTrip(this.trip.id).subscribe(() => {
-      this.loadTrips.emit(true);
     });
   }
 

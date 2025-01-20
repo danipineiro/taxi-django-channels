@@ -7,6 +7,7 @@ import {UserService} from "../../services/user.service";
 import {NgForOf, NgIf} from "@angular/common";
 import {Trip, tripStatus} from "../../models/trip-dto";
 import {TripComponent} from "../trip/trip.component";
+import {WebsocketService} from "../../services/websocket.service";
 
 @Component({
   selector: 'app-home',
@@ -30,7 +31,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private readonly tripService: TripService,
-    private userService: UserService
+    private userService: UserService,
+    private websocketService: WebsocketService
   ) {
   }
 
@@ -39,6 +41,14 @@ export class HomeComponent implements OnInit {
       this.currentUser = user;
       this.loadTrips();
     });
+
+    this.websocketService.connect('ws://localhost:8001/ws/trip/');
+
+    this.websocketService.getMessages().subscribe((message) => {
+      const trip: Trip = message['content']
+      this.handleTripUpdate(trip);
+    });
+
   }
 
   loadTrips() {
@@ -60,12 +70,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  refreshTrips($event: boolean) {
-    if ($event) {
-      this.loadTrips();
-    }
-  }
-
   /**
    * This method is used to disable the creation of a new trip.
    * It sets the `disableCreateTrip` property to `true` if there exists a trip that is either requested, started, or accepted.
@@ -73,5 +77,26 @@ export class HomeComponent implements OnInit {
    */
   disableCreteTrip() {
     this.disableCreateTrip = this.trips.some((trip) => [tripStatus.Requested, tripStatus.Started, tripStatus.Accepted].includes(trip.status));
+  }
+
+  /**
+   * Updates the list of trips with the provided trip data.
+   * If a trip with the same ID exists in the list, it is replaced with the updated data.
+   * If no trip with the same ID exists, the new trip is added to the list.
+   *
+   * @param updatedTrip - The trip object containing updated or new data.
+   */
+  handleTripUpdate(updatedTrip: Trip): void {
+    const tripIndex = this.trips.findIndex(trip => trip.id === updatedTrip.id);
+
+    if (tripIndex > -1) {
+      this.trips = [
+        ...this.trips.slice(0, tripIndex),
+        updatedTrip,
+        ...this.trips.slice(tripIndex + 1)
+      ];
+    } else {
+      this.trips = [updatedTrip, ...this.trips];
+    }
   }
 }
