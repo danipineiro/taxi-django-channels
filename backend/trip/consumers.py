@@ -7,12 +7,15 @@ logger = logging.getLogger(__name__)
 
 
 class TripConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        await self.accept()
 
-    async def disconnect(self, close_code):
-        pass
+    groups = ['trip']
 
-    async def receive(self, text_data=None, bytes_data=None):
-        data = json.loads(text_data)
-        await self.send(json.dumps({"message": f"Echo message: {data}"}))
+    async def send_trip_update(self, event):
+        logger.debug('websocket envia!!!!!')
+
+        trip_data = event["data"]
+
+        await self.send(text_data=json.dumps({
+            "type": "trip_update",
+            "content": trip_data
+        }))
