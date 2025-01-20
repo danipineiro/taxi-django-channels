@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MatAnchor, MatButton} from "@angular/material/button";
+import {MatButton} from "@angular/material/button";
 import {TripService} from "../../services/trip.service";
 import {CurrentUserDTO} from "../../models/current-user-dto";
 import {DRIVER, PASSENGER} from "../../shared/constants/user-types";
@@ -13,7 +13,6 @@ import {WebsocketService} from "../../services/websocket.service";
   selector: 'app-home',
   standalone: true,
   imports: [
-    MatAnchor,
     MatButton,
     NgIf,
     TripComponent,

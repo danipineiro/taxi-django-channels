@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Trip, tripStatus} from "../../models/trip-dto";
 import {MatButton} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
