@@ -1,14 +1,16 @@
 import json
+import logging
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-import logging
+from trip.constants import TRIP_GROUP
 
 logger = logging.getLogger(__name__)
 
 
 class TripConsumer(AsyncWebsocketConsumer):
 
-    groups = ["trip"]
+    groups = [TRIP_GROUP]
 
     async def send_trip_update(self, event):
         logger.debug("websocket envia!!!!!")
