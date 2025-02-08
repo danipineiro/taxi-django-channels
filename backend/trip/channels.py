@@ -14,7 +14,9 @@ async def broadcast_trip_state(instance):
     """
     channel_layer = get_channel_layer()
     if not channel_layer:
-        logger.warning("Channel layer not configured. Skipping broadcast.")
+        logger.warning(
+            f"Channel layer not configured. Skipping broadcast for Trip ID {instance.id}."
+        )
         return
 
     trip_data = TripSerializer(instance).data
@@ -23,10 +25,13 @@ async def broadcast_trip_state(instance):
         await channel_layer.group_send(
             TRIP_GROUP, {"type": "send_trip_update", "data": trip_data}
         )
-        logger.debug(f"Mensaje enviado al grupo {TRIP_GROUP}: {trip_data}")
+        logger.debug(
+            f"Trip update broadcasted successfully. Trip ID: {instance.id}, Group: {TRIP_GROUP}, Data: {trip_data}"
+        )
     except ValueError as e:
-        logger.error(f"Serialization error for Trip {instance.id}: {str(e)}")
+        logger.error(f"Serialization error for Trip ID {instance.id}. Error: {str(e)}")
     except Exception as e:
         logger.exception(
-            f"Unexpected error broadcasting Trip {instance.id} to {TRIP_GROUP}"
+            f"Unexpected error broadcasting Trip ID {instance.id} to Group {TRIP_GROUP}.",
+            exc_info=True,
         )

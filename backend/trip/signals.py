@@ -17,6 +17,6 @@ def notify_trip_update(sender, instance, created, **kwargs):
     Notifies the trip group about the updated instance.
     """
     action = "created" if created else "updated"
-    logger.info(f"Trip {instance.id} has been {action}. Broadcasting changes.")
+    logger.debug(f"Signal: Trip {instance.id} has been {action}")
 
     async_to_sync(broadcast_trip_state)(instance)
