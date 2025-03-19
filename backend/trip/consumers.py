@@ -20,3 +20,12 @@ class TripConsumer(AsyncWebsocketConsumer):
         await self.send(
             text_data=json.dumps({"type": "trip_update", "content": trip_data})
         )
+
+    async def send_trip_deleted(self, event):
+        trip_id = event["data"]["id"]
+
+        logger.debug(f"Consumer: Sending trip deletion via WebSocket. ID: {trip_id}")
+
+        await self.send(
+            text_data=json.dumps({"type": "trip_deleted", "content": {"id": trip_id}})
+        )
