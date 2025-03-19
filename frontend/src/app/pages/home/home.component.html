@@ -9,7 +9,6 @@
 
   <app-trip *ngFor="let trip of trips"
             [trip]="trip"
-            [currentUser]="currentUser"
-            (loadTrips)="refreshTrips($event)">
+            [currentUser]="currentUser">
   </app-trip>
 </div>
