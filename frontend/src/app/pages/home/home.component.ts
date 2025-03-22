@@ -9,6 +9,7 @@ import {Trip, tripStatus} from "../../models/trip-dto";
 import {TripComponent} from "../trip/trip.component";
 import {WebsocketService} from "../../services/websocket.service";
 import {createWebpackLoggingCallback} from "@angular-devkit/build-angular/src/tools/webpack/utils/stats";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-home',
@@ -32,7 +33,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private readonly tripService: TripService,
     private userService: UserService,
-    private websocketService: WebsocketService
+    private websocketService: WebsocketService,
+    private authService: AuthService
   ) {
   }
 
@@ -66,7 +68,8 @@ export class HomeComponent implements OnInit {
    * to handle incoming messages. The messages are processed by the `handleWebSocketMessage` method.
    */
   private connectWebSocket() {
-    this.websocketService.connect('ws://localhost:8001/ws/trip/');
+    const authToken = this.authService.getAccessToken();
+    this.websocketService.connect(`ws://localhost:8001/ws/trip/?token=${authToken}`);
 
     this.websocketService.getMessages().subscribe(
       message => this.handleWebSocketMessage(message)
