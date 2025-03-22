@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {LoginDTO} from "../models/login-dto";
 import {RegisterDTO} from "../models/register-dto";
+import {WebsocketService} from "./websocket.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,10 @@ export class AuthService {
 
   loggedChanged$ = new EventEmitter<boolean>();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private websocketService: WebsocketService
+  ) {
   }
 
   login(loginDTO: LoginDTO): Observable<any> {
@@ -25,6 +29,7 @@ export class AuthService {
   }
 
   logout() {
+    this.websocketService.close()
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
     localStorage.removeItem('currentUser');

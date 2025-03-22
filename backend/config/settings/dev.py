@@ -3,7 +3,7 @@ from datetime import timedelta
 from .base import *
 
 MIDDLEWARE += [
-    "common.middleware.QueryCountMiddleware",
+    "common.middlewares.QueryCountMiddleware",
 ]
 
 AUTH_PASSWORD_VALIDATORS = []
