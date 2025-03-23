@@ -1,4 +1,5 @@
 import django
+
 django.setup()
 
 import jwt
@@ -17,6 +18,7 @@ User = get_user_model()
 
 logger = logging.getLogger(__name__)
 
+
 class JWTAuthMiddleware(BaseMiddleware):
     """Middleware to authenticate user for WebSocket connections using JWT."""
 
@@ -31,7 +33,12 @@ class JWTAuthMiddleware(BaseMiddleware):
             try:
                 data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
                 scope["user"] = await self.get_user(data["user_id"])
-            except (InvalidSignatureError, ExpiredSignatureError, DecodeError, KeyError) as e:
+            except (
+                InvalidSignatureError,
+                ExpiredSignatureError,
+                DecodeError,
+                KeyError,
+            ) as e:
                 scope["user"] = AnonymousUser()
         else:
             scope["user"] = AnonymousUser()
@@ -44,6 +51,7 @@ class JWTAuthMiddleware(BaseMiddleware):
             return User.objects.get(id=user_id)
         except User.DoesNotExist:
             return AnonymousUser()
+
 
 def JWTAuthMiddlewareStack(app):
     """Wraps the Django Channels authentication stack with JWTAuthMiddleware."""
