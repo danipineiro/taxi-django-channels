@@ -2,13 +2,13 @@ import logging
 
 from channels.layers import get_channel_layer
 
-from trip.constants import TRIP_GROUP
+from trip.constants import TRIP_GROUP, DRIVERS_GROUP
 from trip.serializers import TripSerializer
 
 logger = logging.getLogger(__name__)
 
 
-async def broadcast_trip_state(instance):
+async def broadcast_trip_state(instance, created=False):
     """
     Broadcasts trip update to the specified group using Django Channels.
     """
@@ -19,11 +19,13 @@ async def broadcast_trip_state(instance):
         )
         return
 
-    trip_data = TripSerializer(instance).data
-
     try:
+        trip_data = TripSerializer(instance).data
+
+        group = DRIVERS_GROUP if created else TRIP_GROUP
+
         await channel_layer.group_send(
-            TRIP_GROUP, {"type": "send_trip_update", "data": trip_data}
+            group, {"type": "send_trip_update", "data": trip_data}
         )
         logger.debug(
             f"Trip update broadcasted successfully. Trip ID: {instance.id}, Group: {TRIP_GROUP}, Data: {trip_data}"
