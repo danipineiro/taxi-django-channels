@@ -2,7 +2,7 @@ import logging
 
 from channels.layers import get_channel_layer
 
-from trip.constants import TRIP_GROUP, DRIVERS_GROUP
+from trip.constants import DRIVERS_GROUP, TRIP_GROUP
 from trip.serializers import TripSerializer
 
 logger = logging.getLogger(__name__)
@@ -21,22 +21,48 @@ async def broadcast_trip_state(instance, created=False):
 
     try:
         trip_data = TripSerializer(instance).data
-
-        group = DRIVERS_GROUP if created else TRIP_GROUP
-
-        await channel_layer.group_send(
-            group, {"type": "send_trip_update", "data": trip_data}
-        )
-        logger.debug(
-            f"Trip update broadcasted successfully. Trip ID: {instance.id}, Group: {TRIP_GROUP}, Data: {trip_data}"
-        )
     except ValueError as e:
         logger.error(f"Serialization error for Trip ID {instance.id}. Error: {str(e)}")
-    except Exception as e:
-        logger.exception(
-            f"Unexpected error broadcasting Trip ID {instance.id} to Group {TRIP_GROUP}.",
-            exc_info=True,
-        )
+        return
+
+    if created:
+        try:
+            await channel_layer.group_send(
+                DRIVERS_GROUP, {"type": "send_trip_update", "data": trip_data}
+            )
+            logger.debug(
+                f"Trip update broadcasted successfully. Trip ID: {instance.id}, Group: {DRIVERS_GROUP}, Data: {trip_data}"
+            )
+        except Exception as e:
+            logger.exception(
+                f"Unexpected error broadcasting Trip ID {instance.id} to Group {DRIVERS_GROUP}.",
+                exc_info=True,
+            )
+    else:
+        try:
+            await channel_layer.group_send(
+                instance.passenger_id, {"type": "send_trip_update", "data": trip_data}
+            )
+            logger.debug(
+                f"Trip update broadcasted successfully. Trip ID: {instance.id}, Group: {instance.passenger_id}, Data: {trip_data}"
+            )
+        except Exception as e:
+            logger.exception(
+                f"Unexpected error broadcasting Trip ID {instance.id} to Group {instance.passenger_id}.",
+                exc_info=True,
+            )
+        try:
+            await channel_layer.group_send(
+                instance.driver_id, {"type": "send_trip_update", "data": trip_data}
+            )
+            logger.debug(
+                f"Trip update broadcasted successfully. Trip ID: {instance.id}, Group: {instance.driver_id}, Data: {trip_data}"
+            )
+        except Exception as e:
+            logger.exception(
+                f"Unexpected error broadcasting Trip ID {instance.id} to Group {instance.driver_id}.",
+                exc_info=True,
+            )
 
 
 async def send_trip_deleted(instance_id):

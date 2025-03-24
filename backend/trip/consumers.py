@@ -23,6 +23,8 @@ class TripConsumer(AsyncWebsocketConsumer):
         if user.type == User.DRIVER:
             await self.channel_layer.group_add(DRIVERS_GROUP, self.channel_name)
 
+        await self.channel_layer.group_add(user.id, self.channel_name)
+
         logger.info(f"WebSocket connected: {user}")
         await self.accept()
 
