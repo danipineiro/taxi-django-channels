@@ -3,7 +3,8 @@ import logging
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from trip.constants import TRIP_GROUP
+from trip.constants import TRIP_GROUP, DRIVERS_GROUP
+from user.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,9 @@ class TripConsumer(AsyncWebsocketConsumer):
             logger.warning("WebSocket connection rejected: Unauthorized user")
             await self.close()
             return
+
+        if user.type == User.DRIVER:
+            await self.channel_layer.group_add(DRIVERS_GROUP, self.channel_name)
 
         logger.info(f"WebSocket connected: {user}")
         await self.accept()
